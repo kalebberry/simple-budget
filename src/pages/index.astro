@@ -1,0 +1,23 @@
+---
+import '../styles/main.scss';
+import SafeToSpendCard from '../components/SafeToSpendCard.vue';
+import AddTransactionForm from '../components/AddTranactionForm.vue';
+---
+
+<html lang='en'>
+	<head>
+		<meta charset='utf-8' />
+		<link rel='icon' type='image/svg+xml' href='/favicon.svg' />
+		<meta name='viewport' content='width=device-width' />
+		<meta name='generator' content={Astro.generator} />
+		<title>Simple Budget App</title>
+	</head>
+	<body>
+		<main style='max-width: 600px; margin: 2rem auto;'>
+			<h1 style='font-size: 2rem; margin-bottom: 1rem;'>Dashboard</h1>
+
+			<SafeToSpendCard client:load />
+			<AddTransactionForm client:load />
+		</main>
+	</body>
+</html>
