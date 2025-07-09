@@ -1,47 +1,102 @@
-# Astro Starter Kit: Minimal
+# ADHD Budget App 🧠💸
 
-```sh
-npm create astro@latest -- --template minimal
+A budgeting tool inspired by Simple Bank — thoughtfully redesigned for neurodivergent users, especially those with ADHD. Built using **Astro + Vue + Pinia**, this app focuses on simplicity, clarity, and supportive automation.
+
+---
+
+## 🎯 Vision
+
+This app helps users:
+
+- Clearly see what they can safely spend (`Safe-to-Spend`)
+- Automatically split income into bills, goals, and vaults
+- Reduce decision fatigue and budgeting burnout
+- Get gentle visual feedback and positive reinforcement
+
+---
+
+## 🚧 Roadmap
+
+### ✅ Phase 1: Core Budgeting System
+
+- [x] Manual Transaction Entry
+- [x] Safe-to-Spend Calculation
+- [x] Budget Categories & Savings Goals
+- [x] Rolling Budgets (carry over unused money)
+
+### ✅ Phase 2: Light Automation & Smarter UX
+
+- [x] Quick Add Buttons for Transactions
+- [x] Recurring Bills & Expenses
+- [x] Auto-Categorization of Transactions
+- [x] Lazy Mode (Estimated Spending)
+
+### ✅ Phase 3: Gamification & Persona-Style Visual Novel UI
+
+- [x] Character Portraits that react to spending
+- [x] GSAP + PixiJS animations (Budget Buddy)
+- [x] Budget Streak System & Milestone Rewards
+- [x] Smart Alerts: "Overspending on Fast Food?"
+- [x] Forecasting: Future Safe-to-Spend trends
+
+### ✅ Phase 4: Advanced Automation & AI
+
+- [x] CSV Import for Bank Transactions
+- [x] OCR for Receipt Scanning
+- [x] Rule-Based Auto-Savings (e.g., "Save $5 when I eat out")
+
+---
+
+## 🛠️ Tech Stack
+
+- [Astro](https://astro.build) (Static-first UI framework)
+- [Vue 3](https://vuejs.org) (UI reactivity and interactivity)
+- [Pinia](https://pinia.vuejs.org) (Vue state management)
+- [TypeScript](https://www.typescriptlang.org)
+- [SCSS](https://sass-lang.com) (7-1 architecture)
+- [GSAP](https://greensock.com/gsap/) + [PixiJS](https://pixijs.com) (Animations for gamification)
+
+---
+
+## ⚙️ Getting Started
+
+### Install dependencies:
+
+```bash
+npm install
 ```
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/minimal)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/minimal)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/minimal/devcontainer.json)
+### Run the development server:
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```
+npm run dev
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+Open your browser to http://localhost:4321.
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+## 📁 Project Structure
 
-Any static assets, like images, can be placed in the `public/` directory.
+src/
+├── components/
+│ ├── vue/ # Vue interactive components
+│ ├── astro/ # Static Astro layout parts
+├── pages/ # Astro routes (Dashboard, Goals, etc.)
+├── stores/ # Pinia state management
+├── styles/ # SCSS styles (7-1 pattern)
+├── hydrate/ # Manual Vue + Pinia mount scripts
+├── utils/ # Helper functions (budget, currency, etc.)
+├── data/ # Static/mock data
+├── composables/ # Reusable logic (Vue Composition API)
+├── types/ # TypeScript interfaces
 
-## 🧞 Commands
+## 🧠 Why This Exists
 
-All commands are run from the root of the project, from a terminal:
+Most budgeting apps are cluttered, stressful, or too rigid. This one is:
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+- Visual and encouraging 🖼️
 
-## 👀 Want to learn more?
+- Built around executive function challenges 🧩
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+- Focused on progress, not punishment 🧘‍♂️
+
+Built with 💙 for neurodivergent creators.
