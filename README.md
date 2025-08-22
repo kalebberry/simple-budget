@@ -75,7 +75,7 @@ npm run dev
 Open your browser to http://localhost:4321.
 
 ## 📁 Project Structure
-
+```
 src/
 ├── components/
 │ ├── vue/ # Vue interactive components
@@ -88,6 +88,7 @@ src/
 ├── data/ # Static/mock data
 ├── composables/ # Reusable logic (Vue Composition API)
 ├── types/ # TypeScript interfaces
+```
 
 ## 🧠 Why This Exists
 
