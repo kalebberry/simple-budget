@@ -7,6 +7,6 @@ const budgetStore = useBudgetStore();
 <template>
 	<div class="safe-to-spend">
 		<h2>Safe to Spend</h2>
-		<p>\${{ budgetStore.safeToSpend }}</p>
+		<p>${{ budgetStore.safeToSpend }}</p>
 	</div>
 </template>

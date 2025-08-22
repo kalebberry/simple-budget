@@ -1,1 +1,25 @@
 @use "../abstracts" as *;
+
+.transaction-list {
+    margin-top: 2rem;
+
+    ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .transaction-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.75rem;
+        border-bottom: 1px solid #eee;
+
+        .amount.negative {
+            color: #e53935;
+        }
+
+        .amount.positive {
+            color: #43a047;
+        }
+    }
+}
