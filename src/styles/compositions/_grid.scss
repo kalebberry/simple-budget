@@ -1,70 +1,128 @@
-/* AUTO GRID
-Related Every Layout: https://every-layout.dev/layouts/grid/
-More info on the flexible nature: https://piccalil.li/tutorial/create-a-responsive-grid-layout-with-no-media-queries-using-css-grid/
-A flexible layout that will create an auto-fill grid with
-configurable grid item sizes
+/* --- Grid System Configuration -------------------------------------- */
+// The maximum number of columns to generate utilities for.
+$grid-max-cols: 12;
 
-CUSTOM PROPERTIES AND CONFIGURATION
---gutter (var(--space-m)): This defines the space
-between each item.
+// The minimum item size for a 2-column layout.
+$grid-min-size-start: 16rem;
 
---grid-min-item-size (14rem): How large each item should be
-ideally, as a minimum.
+// The minimum item size for the highest column layout (at $grid-max-cols).
+$grid-min-size-end: 6rem;
 
---grid-placement (auto-fill): Set either auto-fit or auto-fill
-to change how empty grid tracks are handled */
+/*
+      AUTO GRID
+      Related Every Layout: https://every-layout.dev/layouts/grid/
+      More info: https://piccalil.li/tutorial/create-a-responsive-grid-layout-with-no-media-queries-using-css-grid/
+
+      Custom properties (with sensible fallbacks):
+        --gutter: space between items (default 1rem here)
+        --grid-min-item-size: minimum preferred card width (default 16rem)
+        --grid-placement: auto-fit (collapse empty tracks) or auto-fill
+    */
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(var(--grid-placement, auto-fill), minmax(var(--grid-min-item-size, 16rem), 1fr));
-  gap: var(--gutter, var(--space-l));
+  grid-template-columns: repeat(var(--grid-placement, auto-fit), minmax(var(--grid-min-item-size, 16rem), 1fr));
+  gap: var(--gutter, 1rem);
+  grid-auto-rows: minmax(min-content, auto);
+
+  /* --- MODIFIERS --- */
+
+  &[data-cols],
+  &[data-layout] {
+    --grid-placement: auto-fit;
+  }
+
+  &[data-cols="1"] {
+    --grid-min-item-size: 100%;
+  }
+
+  /* Loop to generate column presets from 2 up to $grid-max-cols */
+  @for $i from 2 through $grid-max-cols {
+    &[data-cols="#{$i}"] {
+      // Dynamically calculate the minimum size for this column count.
+      // It interpolates between the start and end sizes defined above.
+      $size-range: $grid-min-size-start - $grid-min-size-end;
+      $col-range: $grid-max-cols - 2;
+      $size-step: $size-range / $col-range;
+      $min-size: $grid-min-size-start - (($i - 2) * $size-step);
+
+      --grid-min-item-size: max(#{$min-size}, calc((100% - (var(--gutter, 1rem) * #{$i - 1})) / #{$i}));
+    }
+  }
+
+  /* Dense packing (fills gaps when items span columns/rows) */
+  &--dense {
+    grid-auto-flow: dense;
+  }
+  &__span-2 {
+    grid-column: span 2;
+  }
+  &__row-2 {
+    grid-row: span 2;
+  }
 }
 
-/* A split 50/50 layout */
-.grid[data-layout="50-50"] {
-  --grid-placement: auto-fit;
-  --grid-min-item-size: clamp(16rem, 50vw, 33rem);
+/* Sidebar layout (explicit 2D grid, complementary to auto-grid) */
+.sidebar-grid {
+  display: grid;
+  gap: var(--gutter, 1rem);
+  grid-template-columns: minmax(16rem, 3fr) minmax(12rem, 1fr);
 }
 
-/* Three column grid layout */
-.grid[data-layout="thirds"] {
-  --grid-placement: auto-fit;
-  --grid-min-item-size: clamp(16rem, 33%, 20rem);
-}
-
-// FLEXBOX GRID
-
-// Grid Container
-.grid-flex {
+/* --- FLEXBOX GRID SYSTEM (Alternative) ------------------------------ */
+/*
+      A Flexbox-based responsive grid.
+      - Uses `flex-basis` to set the ideal width.
+      - Uses `min-width` to enforce a floor and trigger wrapping.
+      - Uses `flex-grow: 1` to allow items to expand and fill rows.
+    */
+.flex-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--grid-gap, 1rem);
+  gap: var(--gutter, 1rem);
+
+  > * {
+    flex-grow: 1;
+  }
+
+  &[data-cols="1"] > * {
+    flex-basis: 100%;
+  }
+
+  /* Loop to generate column presets from 2 up to $grid-max-cols */
+  @for $i from 2 through $grid-max-cols {
+    &[data-cols="#{$i}"] > * {
+      // Dynamically calculate the minimum size for this column count.
+      $size-range: $grid-min-size-start - $grid-min-size-end;
+      $col-range: $grid-max-cols - 2;
+      $size-step: $size-range / $col-range;
+      $min-size: $grid-min-size-start - (($i - 2) * $size-step);
+
+      flex-basis: calc((100% - (var(--gutter, 1rem) * #{$i - 1})) / #{$i});
+      min-width: $min-size;
+    }
+  }
+
+  // Playground variant that uses custom properties for dynamic control.
+  &.flex-grid--playground > * {
+    min-width: var(--min-width, 16rem);
+    flex-basis: var(--flex-basis, 30%);
+  }
 }
 
-// Grid Item (flex columns)
-.grid-flex__item {
-  flex: 1 1 100%; // full-width by default
-  min-width: 0; // prevents overflow from long content
-}
+/* --- MASONRY LAYOUT (CSS Columns) ----------------------------------- */
+/*
+      A true masonry layout using CSS Columns.
+      - `column-count` defines the number of columns.
+      - `break-inside: avoid` prevents items from splitting across columns.
+      - Note: The fill order is vertical (down the columns), not horizontal.
+    */
+.masonry-grid {
+  column-count: var(--masonry-cols, 3);
+  column-gap: var(--gutter, 1rem);
 
-// Modifiers for breakpoints
-@media (min-width: 40em) {
-  .grid-flex--2 .grid-flex__item {
-    flex: 1 1 calc(50% - var(--grid-gap));
-  }
-  .grid-flex--3 .grid-flex__item {
-    flex: 1 1 calc(33.333% - var(--grid-gap));
-  }
-  .grid-flex--4 .grid-flex__item {
-    flex: 1 1 calc(25% - var(--grid-gap));
-  }
-}
-
-@media (min-width: 64em) {
-  .grid-flex-5 .grid-flex__item {
-    flex: 1 1 calc(20% - var(--grid-gap));
-  }
-  .grid-flex--6 .grid-flex__item {
-    flex: 1 1 calc(16.666% - var(--grid-gap));
+  > * {
+    break-inside: avoid;
+    margin-bottom: var(--gutter, 1rem);
   }
 }

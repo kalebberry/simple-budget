@@ -114,6 +114,26 @@ textarea:not([rows]) {
   scroll-margin-block: 5ex;
 }
 
+.transaction-list {
+  margin-top: 2rem;
+}
+.transaction-list ul {
+  list-style: none;
+  padding: 0;
+}
+.transaction-list .transaction-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem;
+  border-bottom: 1px solid #eee;
+}
+.transaction-list .transaction-item .amount.negative {
+  color: #e53935;
+}
+.transaction-list .transaction-item .amount.positive {
+  color: #43a047;
+}
+
 :is(h1, h2, h3, h4) {
   line-height: var(--leading-fine);
   text-wrap: balance;
@@ -193,37 +213,164 @@ Can be any acceptable flexbox alignment value.
   --flow-space: 0.5em;
 }
 
-/* AUTO GRID
-Related Every Layout: https://every-layout.dev/layouts/grid/
-More info on the flexible nature: https://piccalil.li/tutorial/create-a-responsive-grid-layout-with-no-media-queries-using-css-grid/
-A flexible layout that will create an auto-fill grid with
-configurable grid item sizes
+/* --- Grid System Configuration -------------------------------------- */
+/*
+      AUTO GRID
+      Related Every Layout: https://every-layout.dev/layouts/grid/
+      More info: https://piccalil.li/tutorial/create-a-responsive-grid-layout-with-no-media-queries-using-css-grid/
 
-CUSTOM PROPERTIES AND CONFIGURATION
---gutter (var(--space-m)): This defines the space
-between each item.
-
---grid-min-item-size (14rem): How large each item should be
-ideally, as a minimum.
-
---grid-placement (auto-fill): Set either auto-fit or auto-fill
-to change how empty grid tracks are handled */
+      Custom properties (with sensible fallbacks):
+        --gutter: space between items (default 1rem here)
+        --grid-min-item-size: minimum preferred card width (default 16rem)
+        --grid-placement: auto-fit (collapse empty tracks) or auto-fill
+    */
 .grid {
   display: grid;
-  grid-template-columns: repeat(var(--grid-placement, auto-fill), minmax(var(--grid-min-item-size, 16rem), 1fr));
-  gap: var(--gutter, var(--space-l));
+  grid-template-columns: repeat(var(--grid-placement, auto-fit), minmax(var(--grid-min-item-size, 16rem), 1fr));
+  gap: var(--gutter, 1rem);
+  grid-auto-rows: minmax(min-content, auto);
+  /* --- MODIFIERS --- */
+  /* Loop to generate column presets from 2 up to $grid-max-cols */
+  /* Dense packing (fills gaps when items span columns/rows) */
+}
+.grid[data-cols], .grid[data-layout] {
+  --grid-placement: auto-fit;
+}
+.grid[data-cols="1"] {
+  --grid-min-item-size: 100%;
+}
+.grid[data-cols="2"] {
+  --grid-min-item-size: max(16rem, calc((100% - (var(--gutter, 1rem) * 1)) / 2));
+}
+.grid[data-cols="3"] {
+  --grid-min-item-size: max(15rem, calc((100% - (var(--gutter, 1rem) * 2)) / 3));
+}
+.grid[data-cols="4"] {
+  --grid-min-item-size: max(14rem, calc((100% - (var(--gutter, 1rem) * 3)) / 4));
+}
+.grid[data-cols="5"] {
+  --grid-min-item-size: max(13rem, calc((100% - (var(--gutter, 1rem) * 4)) / 5));
+}
+.grid[data-cols="6"] {
+  --grid-min-item-size: max(12rem, calc((100% - (var(--gutter, 1rem) * 5)) / 6));
+}
+.grid[data-cols="7"] {
+  --grid-min-item-size: max(11rem, calc((100% - (var(--gutter, 1rem) * 6)) / 7));
+}
+.grid[data-cols="8"] {
+  --grid-min-item-size: max(10rem, calc((100% - (var(--gutter, 1rem) * 7)) / 8));
+}
+.grid[data-cols="9"] {
+  --grid-min-item-size: max(9rem, calc((100% - (var(--gutter, 1rem) * 8)) / 9));
+}
+.grid[data-cols="10"] {
+  --grid-min-item-size: max(8rem, calc((100% - (var(--gutter, 1rem) * 9)) / 10));
+}
+.grid[data-cols="11"] {
+  --grid-min-item-size: max(7rem, calc((100% - (var(--gutter, 1rem) * 10)) / 11));
+}
+.grid[data-cols="12"] {
+  --grid-min-item-size: max(6rem, calc((100% - (var(--gutter, 1rem) * 11)) / 12));
+}
+.grid--dense {
+  grid-auto-flow: dense;
+}
+.grid__span-2 {
+  grid-column: span 2;
+}
+.grid__row-2 {
+  grid-row: span 2;
 }
 
-/* A split 50/50 layout */
-.grid[data-layout="50-50"] {
-  --grid-placement: auto-fit;
-  --grid-min-item-size: clamp(16rem, 50vw, 33rem);
+/* Sidebar layout (explicit 2D grid, complementary to auto-grid) */
+.sidebar-grid {
+  display: grid;
+  gap: var(--gutter, 1rem);
+  grid-template-columns: minmax(16rem, 3fr) minmax(12rem, 1fr);
 }
 
-/* Three column grid layout */
-.grid[data-layout=thirds] {
-  --grid-placement: auto-fit;
-  --grid-min-item-size: clamp(16rem, 33%, 20rem);
+/* --- FLEXBOX GRID SYSTEM (Alternative) ------------------------------ */
+/*
+      A Flexbox-based responsive grid.
+      - Uses `flex-basis` to set the ideal width.
+      - Uses `min-width` to enforce a floor and trigger wrapping.
+      - Uses `flex-grow: 1` to allow items to expand and fill rows.
+    */
+.flex-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gutter, 1rem);
+  /* Loop to generate column presets from 2 up to $grid-max-cols */
+}
+.flex-grid > * {
+  flex-grow: 1;
+}
+.flex-grid[data-cols="1"] > * {
+  flex-basis: 100%;
+}
+.flex-grid[data-cols="2"] > * {
+  flex-basis: calc((100% - var(--gutter, 1rem) * 1) / 2);
+  min-width: 16rem;
+}
+.flex-grid[data-cols="3"] > * {
+  flex-basis: calc((100% - var(--gutter, 1rem) * 2) / 3);
+  min-width: 15rem;
+}
+.flex-grid[data-cols="4"] > * {
+  flex-basis: calc((100% - var(--gutter, 1rem) * 3) / 4);
+  min-width: 14rem;
+}
+.flex-grid[data-cols="5"] > * {
+  flex-basis: calc((100% - var(--gutter, 1rem) * 4) / 5);
+  min-width: 13rem;
+}
+.flex-grid[data-cols="6"] > * {
+  flex-basis: calc((100% - var(--gutter, 1rem) * 5) / 6);
+  min-width: 12rem;
+}
+.flex-grid[data-cols="7"] > * {
+  flex-basis: calc((100% - var(--gutter, 1rem) * 6) / 7);
+  min-width: 11rem;
+}
+.flex-grid[data-cols="8"] > * {
+  flex-basis: calc((100% - var(--gutter, 1rem) * 7) / 8);
+  min-width: 10rem;
+}
+.flex-grid[data-cols="9"] > * {
+  flex-basis: calc((100% - var(--gutter, 1rem) * 8) / 9);
+  min-width: 9rem;
+}
+.flex-grid[data-cols="10"] > * {
+  flex-basis: calc((100% - var(--gutter, 1rem) * 9) / 10);
+  min-width: 8rem;
+}
+.flex-grid[data-cols="11"] > * {
+  flex-basis: calc((100% - var(--gutter, 1rem) * 10) / 11);
+  min-width: 7rem;
+}
+.flex-grid[data-cols="12"] > * {
+  flex-basis: calc((100% - var(--gutter, 1rem) * 11) / 12);
+  min-width: 6rem;
+}
+.flex-grid.flex-grid--playground > * {
+  min-width: var(--min-width, 16rem);
+  flex-basis: var(--flex-basis, 30%);
+}
+
+/* --- MASONRY LAYOUT (CSS Columns) ----------------------------------- */
+/*
+      A true masonry layout using CSS Columns.
+      - `column-count` defines the number of columns.
+      - `break-inside: avoid` prevents items from splitting across columns.
+      - Note: The fill order is vertical (down the columns), not horizontal.
+    */
+.masonry-grid {
+  column-count: var(--masonry-cols, 3);
+  column-gap: var(--gutter, 1rem);
+}
+.masonry-grid > * {
+  break-inside: avoid;
+  margin-bottom: var(--gutter, 1rem);
 }
 
 /*
