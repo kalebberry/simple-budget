@@ -1,6 +1,5 @@
+@charset "UTF-8";
 @import url("https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300&family=PT+Serif:wght@400;700&display=swap");
-/* Themne */
-/* Layout Tokens */
 :root {
   --fs-step-000: clamp(0.7406rem, 0.7263rem + 0.061vi, 0.7813rem);
   --fs-step-00: clamp(0.8331rem, 0.7964rem + 0.1568vi, 0.9375rem);
@@ -19,6 +18,8 @@
   --fs-step-12: clamp(3.7887rem, 0.0612rem + 15.9042vi, 14.375rem);
 }
 
+/* Themne */
+/* Layout Tokens */
 /* Box sizing rules */
 *,
 *::after,
@@ -139,21 +140,6 @@ textarea:not([rows]) {
   text-wrap: balance;
 }
 
-h1 {
-  font-size: var(--fs-step-5);
-  max-width: 20ch;
-}
-
-h2 {
-  font-size: var(--fs-step-4);
-  max-width: 35ch;
-}
-
-h3 {
-  font-size: var(--fs-step-3);
-  max-width: 35ch;
-}
-
 :is(h4, h5, h6) {
   font-size: var(--size-step-3);
 }
@@ -214,28 +200,132 @@ Can be any acceptable flexbox alignment value.
 }
 
 /* --- Grid System Configuration -------------------------------------- */
-/*
-      AUTO GRID
-      Related Every Layout: https://every-layout.dev/layouts/grid/
-      More info: https://piccalil.li/tutorial/create-a-responsive-grid-layout-with-no-media-queries-using-css-grid/
+/* Derived once (Sass math, not runtime calc) */
+/* --- Utilities ------------------------------------------------------- */
+.gap-0 {
+  --gutter: 0;
+}
 
-      Custom properties (with sensible fallbacks):
-        --gutter: space between items (default 1rem here)
-        --grid-min-item-size: minimum preferred card width (default 16rem)
-        --grid-placement: auto-fit (collapse empty tracks) or auto-fill
-    */
-.grid {
+.gap-2 {
+  --gutter: 0.5rem;
+}
+
+.gap-4 {
+  --gutter: 1rem;
+}
+
+.gap-6 {
+  --gutter: 1.5rem;
+}
+
+.grid--fill {
+  --grid-placement: auto-fill;
+}
+
+.grid--fit {
+  --grid-placement: auto-fit;
+}
+
+.grid__span-2 {
+  grid-column: span 2;
+}
+
+.grid__row-2 {
+  grid-row: span 2;
+}
+
+.grid__span-3 {
+  grid-column: span 3;
+}
+
+.grid__row-3 {
+  grid-row: span 3;
+}
+
+.grid__span-4 {
+  grid-column: span 4;
+}
+
+.grid__row-4 {
+  grid-row: span 4;
+}
+
+.grid__span-5 {
+  grid-column: span 5;
+}
+
+.grid__row-5 {
+  grid-row: span 5;
+}
+
+.grid__span-6 {
+  grid-column: span 6;
+}
+
+.grid__row-6 {
+  grid-row: span 6;
+}
+
+.grid__span-7 {
+  grid-column: span 7;
+}
+
+.grid__row-7 {
+  grid-row: span 7;
+}
+
+.grid__span-8 {
+  grid-column: span 8;
+}
+
+.grid__row-8 {
+  grid-row: span 8;
+}
+
+.grid__span-9 {
+  grid-column: span 9;
+}
+
+.grid__row-9 {
+  grid-row: span 9;
+}
+
+.grid__span-10 {
+  grid-column: span 10;
+}
+
+.grid__row-10 {
+  grid-row: span 10;
+}
+
+.grid__span-11 {
+  grid-column: span 11;
+}
+
+.grid__row-11 {
+  grid-row: span 11;
+}
+
+.grid__span-12 {
+  grid-column: span 12;
+}
+
+.grid__row-12 {
+  grid-row: span 12;
+}
+
+/* --- Mixins ---------------------------------------------------------- */
+/* --- Auto Grid (Every Layout style) --------------------------------- */
+:where(.grid) {
   display: grid;
   grid-template-columns: repeat(var(--grid-placement, auto-fit), minmax(var(--grid-min-item-size, 16rem), 1fr));
   gap: var(--gutter, 1rem);
   grid-auto-rows: minmax(min-content, auto);
-  /* --- MODIFIERS --- */
-  /* Loop to generate column presets from 2 up to $grid-max-cols */
-  /* Dense packing (fills gaps when items span columns/rows) */
 }
-.grid[data-cols], .grid[data-layout] {
+:where(.grid)[data-cols], :where(.grid)[data-layout] {
   --grid-placement: auto-fit;
 }
+
 .grid[data-cols="1"] {
   --grid-min-item-size: 100%;
 }
@@ -282,31 +372,50 @@ Can be any acceptable flexbox alignment value.
   grid-row: span 2;
 }
 
-/* Sidebar layout (explicit 2D grid, complementary to auto-grid) */
+.grid-container {
+  container-type: inline-size;
+}
+@container (max-width: 50rem) {
+  .grid-container .grid {
+    --grid-min-item-size: 14rem;
+  }
+}
+@container (max-width: 30rem) {
+  .grid-container .grid [class*=grid__span-] {
+    grid-column: span 1;
+  }
+}
+
+/* --- Sidebar Grid ---------------------------------------------------- */
 .sidebar-grid {
   display: grid;
   gap: var(--gutter, 1rem);
   grid-template-columns: minmax(16rem, 3fr) minmax(12rem, 1fr);
 }
 
-/* --- FLEXBOX GRID SYSTEM (Alternative) ------------------------------ */
-/*
-      A Flexbox-based responsive grid.
-      - Uses `flex-basis` to set the ideal width.
-      - Uses `min-width` to enforce a floor and trigger wrapping.
-      - Uses `flex-grow: 1` to allow items to expand and fill rows.
-    */
+.sidebar-grid__container {
+  container-type: inline-size;
+}
+@container (max-width: 48rem) {
+  .sidebar-grid__container .sidebar-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- Flexbox Grid ---------------------------------------------------- */
 .flex-grid {
   display: flex;
   flex-wrap: wrap;
+  align-items: stretch;
   gap: var(--gutter, 1rem);
-  /* Loop to generate column presets from 2 up to $grid-max-cols */
 }
 .flex-grid > * {
   flex-grow: 1;
+  min-inline-size: 0;
 }
 .flex-grid[data-cols="1"] > * {
   flex-basis: 100%;
+  min-width: 100%;
 }
 .flex-grid[data-cols="2"] > * {
   flex-basis: calc((100% - var(--gutter, 1rem) * 1) / 2);
@@ -357,13 +466,7 @@ Can be any acceptable flexbox alignment value.
   flex-basis: var(--flex-basis, 30%);
 }
 
-/* --- MASONRY LAYOUT (CSS Columns) ----------------------------------- */
-/*
-      A true masonry layout using CSS Columns.
-      - `column-count` defines the number of columns.
-      - `break-inside: avoid` prevents items from splitting across columns.
-      - Note: The fill order is vertical (down the columns), not horizontal.
-    */
+/* --- Masonry Grid ---------------------------------------------------- */
 .masonry-grid {
   column-count: var(--masonry-cols, 3);
   column-gap: var(--gutter, 1rem);
@@ -371,6 +474,25 @@ Can be any acceptable flexbox alignment value.
 .masonry-grid > * {
   break-inside: avoid;
   margin-bottom: var(--gutter, 1rem);
+}
+
+.masonry__container {
+  container-type: inline-size;
+}
+@container (max-width: 40rem) {
+  .masonry__container .masonry-grid {
+    --masonry-cols: 1;
+  }
+}
+@container (40rem <= width <= 70rem) {
+  .masonry__container .masonry-grid {
+    --masonry-cols: 2;
+  }
+}
+@container (min-width: 70rem) {
+  .masonry__container .masonry-grid {
+    --masonry-cols: 3;
+  }
 }
 
 /*
@@ -866,6 +988,210 @@ so anything greater than 2 is ful width */
 }
 .padding-inline-96 {
   padding-inline: clamp(6rem, 5.48rem + 2.61vw, 7.5rem);
+}
+
+/* Flat utilities: .fs-step-0, .fs-step-1, … */
+.fs-step-000 {
+  font-size: var(--fs-step-000);
+}
+
+.fs-step-00 {
+  font-size: var(--fs-step-00);
+}
+
+.fs-step-0 {
+  font-size: var(--fs-step-0);
+}
+
+.fs-step-1 {
+  font-size: var(--fs-step-1);
+}
+
+.fs-step-2 {
+  font-size: var(--fs-step-2);
+}
+
+.fs-step-3 {
+  font-size: var(--fs-step-3);
+}
+
+.fs-step-4 {
+  font-size: var(--fs-step-4);
+}
+
+.fs-step-5 {
+  font-size: var(--fs-step-5);
+}
+
+.fs-step-6 {
+  font-size: var(--fs-step-6);
+}
+
+.fs-step-7 {
+  font-size: var(--fs-step-7);
+}
+
+.fs-step-8 {
+  font-size: var(--fs-step-8);
+}
+
+.fs-step-9 {
+  font-size: var(--fs-step-9);
+}
+
+.fs-step-10 {
+  font-size: var(--fs-step-10);
+}
+
+.fs-step-11 {
+  font-size: var(--fs-step-11);
+}
+
+.fs-step-12 {
+  font-size: var(--fs-step-12);
+}
+
+/* Optional responsive: .sm:fs-step-2, .md:fs-step-4, … */
+@media (min-width: 40rem) {
+  .sm\:fs-step-000 {
+    font-size: var(--fs-step-000);
+  }
+  .sm\:fs-step-00 {
+    font-size: var(--fs-step-00);
+  }
+  .sm\:fs-step-0 {
+    font-size: var(--fs-step-0);
+  }
+  .sm\:fs-step-1 {
+    font-size: var(--fs-step-1);
+  }
+  .sm\:fs-step-2 {
+    font-size: var(--fs-step-2);
+  }
+  .sm\:fs-step-3 {
+    font-size: var(--fs-step-3);
+  }
+  .sm\:fs-step-4 {
+    font-size: var(--fs-step-4);
+  }
+  .sm\:fs-step-5 {
+    font-size: var(--fs-step-5);
+  }
+  .sm\:fs-step-6 {
+    font-size: var(--fs-step-6);
+  }
+  .sm\:fs-step-7 {
+    font-size: var(--fs-step-7);
+  }
+  .sm\:fs-step-8 {
+    font-size: var(--fs-step-8);
+  }
+  .sm\:fs-step-9 {
+    font-size: var(--fs-step-9);
+  }
+  .sm\:fs-step-10 {
+    font-size: var(--fs-step-10);
+  }
+  .sm\:fs-step-11 {
+    font-size: var(--fs-step-11);
+  }
+  .sm\:fs-step-12 {
+    font-size: var(--fs-step-12);
+  }
+}
+@media (min-width: 64rem) {
+  .md\:fs-step-000 {
+    font-size: var(--fs-step-000);
+  }
+  .md\:fs-step-00 {
+    font-size: var(--fs-step-00);
+  }
+  .md\:fs-step-0 {
+    font-size: var(--fs-step-0);
+  }
+  .md\:fs-step-1 {
+    font-size: var(--fs-step-1);
+  }
+  .md\:fs-step-2 {
+    font-size: var(--fs-step-2);
+  }
+  .md\:fs-step-3 {
+    font-size: var(--fs-step-3);
+  }
+  .md\:fs-step-4 {
+    font-size: var(--fs-step-4);
+  }
+  .md\:fs-step-5 {
+    font-size: var(--fs-step-5);
+  }
+  .md\:fs-step-6 {
+    font-size: var(--fs-step-6);
+  }
+  .md\:fs-step-7 {
+    font-size: var(--fs-step-7);
+  }
+  .md\:fs-step-8 {
+    font-size: var(--fs-step-8);
+  }
+  .md\:fs-step-9 {
+    font-size: var(--fs-step-9);
+  }
+  .md\:fs-step-10 {
+    font-size: var(--fs-step-10);
+  }
+  .md\:fs-step-11 {
+    font-size: var(--fs-step-11);
+  }
+  .md\:fs-step-12 {
+    font-size: var(--fs-step-12);
+  }
+}
+@media (min-width: 80rem) {
+  .lg\:fs-step-000 {
+    font-size: var(--fs-step-000);
+  }
+  .lg\:fs-step-00 {
+    font-size: var(--fs-step-00);
+  }
+  .lg\:fs-step-0 {
+    font-size: var(--fs-step-0);
+  }
+  .lg\:fs-step-1 {
+    font-size: var(--fs-step-1);
+  }
+  .lg\:fs-step-2 {
+    font-size: var(--fs-step-2);
+  }
+  .lg\:fs-step-3 {
+    font-size: var(--fs-step-3);
+  }
+  .lg\:fs-step-4 {
+    font-size: var(--fs-step-4);
+  }
+  .lg\:fs-step-5 {
+    font-size: var(--fs-step-5);
+  }
+  .lg\:fs-step-6 {
+    font-size: var(--fs-step-6);
+  }
+  .lg\:fs-step-7 {
+    font-size: var(--fs-step-7);
+  }
+  .lg\:fs-step-8 {
+    font-size: var(--fs-step-8);
+  }
+  .lg\:fs-step-9 {
+    font-size: var(--fs-step-9);
+  }
+  .lg\:fs-step-10 {
+    font-size: var(--fs-step-10);
+  }
+  .lg\:fs-step-11 {
+    font-size: var(--fs-step-11);
+  }
+  .lg\:fs-step-12 {
+    font-size: var(--fs-step-12);
+  }
 }
 
 /*# sourceMappingURL=main.css.map */

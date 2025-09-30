@@ -6,8 +6,4 @@
       --#{$color}-#{$shade}: #{$value};
     }
   }
-
-  @each $name, $val in $font-sizes {
-    --fs-#{$name}: #{$val};
-  }
 }
