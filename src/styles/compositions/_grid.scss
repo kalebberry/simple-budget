@@ -31,11 +31,11 @@ $__size-step: math.div($__size-range, $__col-range);
   --grid-placement: auto-fit;
 }
 
-@for $s from 2 through $grid-max-cols {
-  .grid__span-#{$s} {
+@for $s from 1 through $grid-max-cols {
+  [data-span="#{$s}"] {
     grid-column: span #{$s};
   }
-  .grid__row-#{$s} {
+  [data-row-span="#{$s}"] {
     grid-row: span #{$s};
   }
 }
@@ -88,12 +88,6 @@ $__size-step: math.div($__size-range, $__col-range);
   &--dense {
     grid-auto-flow: dense;
   }
-  &__span-2 {
-    grid-column: span 2;
-  }
-  &__row-2 {
-    grid-row: span 2;
-  }
 }
 
 .grid-container {
@@ -106,8 +100,8 @@ $__size-step: math.div($__size-range, $__col-range);
   }
 
   @container (max-width: 30rem) {
-    .grid [class*="grid__span-"] {
-      grid-column: span 1;
+    .grid [data-span] {
+      grid-column: span 1 !important;
     }
   }
 }
